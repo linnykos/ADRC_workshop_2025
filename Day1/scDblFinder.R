@@ -30,3 +30,6 @@ pbmc$scDblFinder.class <- sce.dbl$scDblFinder.class
 
 pbmc <- subset(pbmc, scDblFinder.class == "singlet")
 pbmc
+
+save(pbmc,
+     file = "/Users/kevinlin/Library/CloudStorage/Dropbox/Collaboration-and-People/sumie-katie/out/ADRC_workshop_2025/Day1_pbmc.RData")

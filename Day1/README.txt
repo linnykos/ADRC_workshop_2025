@@ -1,0 +1,1 @@
+Slides for Day 1: https://docs.google.com/presentation/d/1VUENZmiCzPKyqFllKhVp5z9_r7ZnwvdMMYF__-xVKxQ/edit?usp=sharing

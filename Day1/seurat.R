@@ -6,7 +6,7 @@ library(Seurat)
 pbmc.data <- Seurat::Read10X(data.dir = "/Users/kevinlin/Library/CloudStorage/Dropbox/Collaboration-and-People/sumie-katie/data/seurat-pbmc/filtered_feature_bc_matrix")
 
 # Initialize the Seurat object with the raw (non-normalized data).
-pbmc <- CreateSeuratObject(counts = pbmc.data, 
+pbmc <- Seurat::CreateSeuratObject(counts = pbmc.data, 
                            project = "pbmc3k")
 pbmc
 
