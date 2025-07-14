@@ -13,6 +13,7 @@ pbmc
 pbmc <- Seurat::FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 2000)
 
 # plot variable features with and without labels
-plot1 <- VariableFeaturePlot(pbmc)
-plot2 <- LabelPoints(plot = plot1, points = top10, repel = TRUE)
-plot1 + plot2
+plot1 <- Seurat::VariableFeaturePlot(pbmc)
+top10 <- head(Seurat::VariableFeatures(pbmc), 10)
+plot2 <- Seurat::LabelPoints(plot = plot1, points = top10, repel = TRUE)
+plot2
