@@ -52,3 +52,22 @@ plot(x = pbmc$nCount_RNA,
      pch = 16,
      col = rgb(0.5, 0.5, 0.5, 0.5))
 lines(c(0, 1e6), c(0, 1e6), col = "red", lwd = 2, lty = 2)
+
+count_raw <- SeuratObject::LayerData(pbmc,
+                                     layer = "counts",
+                                     assay = "RNA")
+gene_counts_raw <- Matrix::rowSums(count_raw)
+count_soupx <- SeuratObject::LayerData(pbmc,
+                                       layer = "counts",
+                                       assay = "RNA_cleaned")
+gene_counts_soupx <- Matrix::rowSums(count_soupx)
+
+plot(x = gene_counts_raw, 
+     y = gene_counts_soupx, 
+     asp = TRUE,
+     pch = 16,
+     col = rgb(0.5, 0.5, 0.5, 0.5))
+lines(c(0, 1e6), c(0, 1e6), col = "red", lwd = 2, lty = 2)
+
+
+
