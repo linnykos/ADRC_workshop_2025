@@ -59,3 +59,9 @@ scCustomize::FeaturePlot_scCustom(pbmc,
                                   features = "percent.mt",
                                   reduction = "umap")
 
+genes <- Seurat::VariableFeatures(pbmc)[1:4]
+genes
+scCustomize::FeaturePlot_scCustom(pbmc,
+                                  features = genes,
+                                  reduction = "umap")
+
