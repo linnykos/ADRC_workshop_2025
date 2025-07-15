@@ -25,12 +25,19 @@ pbmc <- Seurat::CellCycleScoring(pbmc,
 
 head(pbmc@meta.data)
 
+options(future.globals.maxSize = 8000 * 1024^2) # https://github.com/satijalab/seurat/issues/1845
+
 # run sctransform
 pbmc <- Seurat::SCTransform(pbmc, 
                             vars.to.regress = c("percent.mt", "S.Score", "G2M.Score"), 
                             verbose = TRUE)
 
 pbmc
+
+data_mat <- SeuratObject::LayerData(pbmc, 
+                                    layer = "data",
+                                    assay = "SCT")
+data_mat[1:10,1:10]
 
 #######################
 
