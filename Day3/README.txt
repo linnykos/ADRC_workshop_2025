@@ -1,0 +1,1 @@
+Slides for Day 3: https://docs.google.com/presentation/d/1mgTbewEPmbM9JwlQY5hTNu1JG-P4VYKqpC06cHYoQhM/edit?usp=sharing

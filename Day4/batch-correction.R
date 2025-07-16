@@ -14,7 +14,7 @@ SeuratData::InstallData("ifnb")
 # load dataset
 ifnb <- SeuratData::LoadData("ifnb")
 ifnb_original <- ifnb # save this for later, for pedagogical comparison
-
+e
 ###############################
 
 # Step 1: Split the RNA measurements into two layers one for control cells, one for stimulated cells
