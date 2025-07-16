@@ -40,3 +40,6 @@ scCustomize::DimPlot_scCustom(seurat_obj,
                               reduction = "umap",
                               group.by = "ADNC")
 
+save(seurat_obj, 
+     file = "/Users/kevinlin/Library/CloudStorage/Dropbox/Collaboration-and-People/sumie-katie/out/ADRC_workshop_2025/seaad_microglia.RData")
+
