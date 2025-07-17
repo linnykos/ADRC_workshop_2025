@@ -14,7 +14,7 @@ SeuratData::InstallData("ifnb")
 # load dataset
 ifnb <- SeuratData::LoadData("ifnb")
 ifnb_original <- ifnb # save this for later, for pedagogical comparison
-e
+
 ###############################
 
 # Step 1: Split the RNA measurements into two layers one for control cells, one for stimulated cells
@@ -35,15 +35,25 @@ ifnb <- Seurat::RunUMAP(ifnb,
                         reduction = "integrated.dr", 
                         dims = 1:30, 
                         reduction.name = "umap.dr")
-p1 <- Seurat::DimPlot(
+Seurat::DimPlot(
   ifnb,
   reduction = "umap.dr",
-  group.by = c("stim"),
-  combine = FALSE, label.size = 2
+  group.by = "stim"
 )
-
-
 
 ##############################
 
-#
+# What did the original look like?
+ifnb_original <- Seurat::SCTransform(ifnb_original)
+ifnb_original <- Seurat::RunPCA(ifnb_original, npcs = 30, verbose = F)
+ifnb_original <- Seurat::RunUMAP(ifnb_original, 
+                                 reduction = "pca", 
+                                 dims = 1:30, 
+                                 reduction.name = "umap")
+Seurat::DimPlot(
+  ifnb_original,
+  reduction = "umap",
+  group.by = "stim"
+)
+
+
