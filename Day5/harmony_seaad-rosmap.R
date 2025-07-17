@@ -108,11 +108,25 @@ rosmap <- Seurat::DietSeurat(
   dimreducs   = "integrated.pca"
 )
 
-
 combo <- merge(seaad, 
-               rosmap, 
-               merge.data = FALSE)
-DefaultAssay(combo) <- "RNA"  
+               rosmap)
+dataset_vec <- rep(NA, length(Seurat::Cells(combo)))
+names(dataset_vec) <- Seurat::Cells(combo)
+dataset_vec[Seurat::Cells(seaad)] <- "SEAAD"
+dataset_vec[Seurat::Cells(rosmap)] <- "ROSMAP"
+combo$dataset <- dataset_vec
+
+# Manually construct the integrated.pca assay
+dimred_mat <- matrix(NA,
+                     nrow = length(Seurat::Cells(combo)),
+                     ncol = ncol(rosmap[["integrated.pca"]]@cell.embeddings),
+                     dimnames = list(
+                       Seurat::Cells(combo),
+                       colnames(rosmap[["integrated.pca"]]@cell.embeddings)
+                     ))
+dimred_mat[Seurat::Cells(seaad),] <- seaad[["integrated.pca"]]@cell.embeddings[,colnames(dimred_mat)]
+dimred_mat[Seurat::Cells(rosmap),] <- rosmap[["integrated.pca"]]@cell.embeddings[,colnames(dimred_mat)]
+combo[["integrated.pca"]] <- Seurat::CreateDimReducObject(dimred_mat)
 
 combo <- Seurat::RunUMAP(
   object     = combo,
@@ -121,15 +135,17 @@ combo <- Seurat::RunUMAP(
   reduction.name = "umap.integrated"
 )
 
-# I'm taking a slightly odd route to be a bit more memory-efficient in R
-integrated_pca <- rbind(seaad[["pca"]]@cell.embeddings[,1:30],
-                        rosmap[["integrated.pca"]]@cell.embeddings[,1:30])
-umap_res <- Seurat::RunUMAP(integrated_pca)
+Seurat::Idents(combo) <- "dataset"
+scCustomize::DimPlot_scCustom(combo,
+                              reduction = "umap.integrated",
+                              group.by = "dataset")
+scCustomize::DimPlot_scCustom(combo,
+                              reduction = "umap.integrated",
+                              split.by = "dataset",
+                              split_seurat = TRUE)
 
-col_vec <- rep("red", nrow(umap_res@cell.embeddings))
-col_vec[1:length(Seurat::Cells(seaad))] <- "blue"
-sample_order <- sample(1:nrow(umap_res@cell.embeddings))
-plot(umap_res@cell.embeddings[sample_order,],
-     col = col_vec[sample_order],
-     pch = 16)
+scCustomize::DimPlot_scCustom(combo,
+                              reduction = "umap.integrated",
+                              split.by = "Supertype",
+                              split_seurat = TRUE)
 
