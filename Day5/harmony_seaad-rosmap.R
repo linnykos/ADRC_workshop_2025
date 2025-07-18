@@ -7,9 +7,7 @@ library(org.Hs.eg.db)
 
 Sys.setenv(R_MAX_VSIZE = 16e9)
 
-load("/Users/kevinlin/Library/CloudStorage/Dropbox/Collaboration-and-People/sumie-katie/out/ADRC_workshop_2025/seaad_microglia.RData")
-seaad <- seurat_obj
-rm(list = "seurat_obj"); gc(TRUE)
+load("/Users/kevinlin/Library/CloudStorage/Dropbox/Collaboration-and-People/sumie-katie/out/ADRC_workshop_2025/microglia_pfc/seaad_microglia.RData")
 seaad <- Seurat::FindVariableFeatures(seaad, nfeatures = 2000)
 seaad <- Seurat::ScaleData(seaad)
 seaad <- Seurat::RunPCA(seaad, 
@@ -28,9 +26,9 @@ scCustomize::DimPlot_scCustom(seaad,
 # 2) https://personal.broadinstitute.org/cboix/sun_victor_et_al_data/ROSMAP.ImmuneCells.6regions.snRNAseq.meta.rds?dl=0
 # 3) https://cells.ucsc.edu/rosmap-ad-aging-brain/microglia-states/meta.tsv
 # construct the ROSMAP object
-rosmap_count <- readRDS("/Users/kevinlin/Library/CloudStorage/Dropbox/Collaboration-and-People/sumie-katie/out/ADRC_workshop_2025/ROSMAP.ImmuneCells.6regions.snRNAseq.counts.rds")
-rosmap_meta <- readRDS("/Users/kevinlin/Library/CloudStorage/Dropbox/Collaboration-and-People/sumie-katie/out/ADRC_workshop_2025/ROSMAP.ImmuneCells.6regions.snRNAseq.meta.rds")
-rosmap_meta2 <- read.csv("/Users/kevinlin/Library/CloudStorage/Dropbox/Collaboration-and-People/sumie-katie/out/ADRC_workshop_2025/ROSMAP.meta.tsv",
+rosmap_count <- readRDS("/Users/kevinlin/Library/CloudStorage/Dropbox/Collaboration-and-People/sumie-katie/out/ADRC_workshop_2025/microglia_pfc/ROSMAP.ImmuneCells.6regions.snRNAseq.counts.rds")
+rosmap_meta <- readRDS("/Users/kevinlin/Library/CloudStorage/Dropbox/Collaboration-and-People/sumie-katie/out/ADRC_workshop_2025/microglia_pfc/ROSMAP.ImmuneCells.6regions.snRNAseq.meta.rds")
+rosmap_meta2 <- read.csv("/Users/kevinlin/Library/CloudStorage/Dropbox/Collaboration-and-People/sumie-katie/out/ADRC_workshop_2025/microglia_pfc/ROSMAP.meta.tsv",
                          sep = "\t")
 rownames(rosmap_meta2) <- rosmap_meta2[,"cellName"]
 
@@ -98,14 +96,14 @@ seaad <- Seurat::DietSeurat(
   features    = common_genes,
   assays      = "RNA",
   counts      = TRUE,   data = FALSE,  scale.data = FALSE,
-  dimreducs   = "integrated.pca"
+  dimreducs   = c("integrated.pca", "umap")
 )
 rosmap <- Seurat::DietSeurat(
   object      = rosmap,
   features    = common_genes,
   assays      = "RNA",
   counts      = TRUE,   data = FALSE,  scale.data = FALSE,
-  dimreducs   = "integrated.pca"
+  dimreducs   = c("integrated.pca", "umap")
 )
 
 combo <- merge(seaad, 
@@ -147,5 +145,17 @@ scCustomize::DimPlot_scCustom(combo,
 scCustomize::DimPlot_scCustom(combo,
                               reduction = "umap.integrated",
                               split.by = "Supertype",
-                              split_seurat = TRUE)
+                              split_seurat = TRUE,
+                              num_columns = 3)
+
+########################
+
+# https://satijalab.org/seurat/articles/integration_mapping.html
+predictions <- Seurat::TransferData(anchorset = anchors, 
+                                    refdata = seaad$Supertype, 
+                                    dims = 1:30)
+rosmap <- Seurat::AddMetaData(rosmap, 
+                              metadata = predictions)
+table(rosmap$predicted.id)
+
 
