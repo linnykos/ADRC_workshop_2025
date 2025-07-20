@@ -158,4 +158,13 @@ rosmap <- Seurat::AddMetaData(rosmap,
                               metadata = predictions)
 table(rosmap$predicted.id)
 
+scCustomize::DimPlot_scCustom(rosmap,
+                              reduction = "umap",
+                              group.by = "predicted.id")
+
+scCustomize::DimPlot_scCustom(rosmap,
+                              reduction = "umap",
+                              split.by = "predicted.id",
+                              split_seurat = TRUE,
+                              num_columns = 3)
 
