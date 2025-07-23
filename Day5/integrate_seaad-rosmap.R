@@ -1,9 +1,7 @@
 rm(list=ls())
 
 library(Seurat)
-library(DESeq2)
-library(clusterProfiler)
-library(org.Hs.eg.db)
+library(scCustomize)
 
 Sys.setenv(R_MAX_VSIZE = 16e9)
 
